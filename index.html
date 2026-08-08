@@ -30,14 +30,46 @@
         <button type="button" class="scene-arrow" aria-label="이전 풍경" data-direction="prev">&#8592;</button>
         <article class="scene-card-body">
           <div class="scene-image-placeholder" id="scene-image-placeholder" aria-hidden="true"></div>
-          <h3 id="scene-title">비 오는 밤에 다락방의 창문</h3>
+          <h3 id="scene-title">다락방</h3>
           <p id="scene-description">빗소리와 함께 조용히 머물 수 있는 다락방 풍경</p>
         </article>
         <button type="button" class="scene-arrow" aria-label="다음 풍경" data-direction="next">&#8594;</button>
       </section>
 
       <footer class="scene-footer">
-        <button type="button" class="action-button action-button-primary">선택</button>
+        <button type="button" class="action-button action-button-primary" id="select-scene-button">선택</button>
+      </footer>
+    </main>
+
+    <main class="main-screen is-hidden" aria-label="메인 화면" data-screen="main">
+      <header class="main-topbar">
+        <h2 id="main-scene-title">다락방</h2>
+        <div class="main-options" aria-label="풍경 옵션 버튼">
+          <div class="selector-group">
+            <button type="button" class="option-button" id="env-toggle" aria-expanded="false" aria-controls="env-panel">환경 선택: 맑음 · 아침</button>
+            <div class="selector-panel selector-panel-grid is-hidden" id="env-panel" role="menu" aria-label="날씨 및 시간대 선택">
+              <section class="selector-column" aria-label="날씨 선택">
+                <h3>날씨</h3>
+                <button type="button" class="selector-option" data-type="weather" data-value="맑음">맑음</button>
+                <button type="button" class="selector-option" data-type="weather" data-value="비">비</button>
+                <button type="button" class="selector-option" data-type="weather" data-value="눈">눈</button>
+              </section>
+
+              <section class="selector-column" aria-label="시간대 선택">
+                <h3>시간대</h3>
+                <button type="button" class="selector-option" data-type="time" data-value="아침">아침</button>
+                <button type="button" class="selector-option" data-type="time" data-value="노을">노을</button>
+                <button type="button" class="selector-option" data-type="time" data-value="밤">밤</button>
+              </section>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <section class="main-stage" aria-label="현재 풍경 배경 영역"></section>
+
+      <footer class="main-footer">
+        <button type="button" class="action-button action-button-primary">사운드 믹서 열기</button>
       </footer>
     </main>
 
