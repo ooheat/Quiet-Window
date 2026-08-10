@@ -59,14 +59,20 @@
                 <h3>시간대</h3>
                 <button type="button" class="selector-option" data-type="time" data-value="아침">아침</button>
                 <button type="button" class="selector-option" data-type="time" data-value="노을">노을</button>
-                <button type="button" class="selector-option" data-type="time" data-value="밤">밤</button>
+                <button type="button" class="selector-option" data-type="time" data-value="저녁">저녁</button>
               </section>
             </div>
           </div>
         </div>
       </header>
 
-      <section class="main-stage" aria-label="현재 풍경 배경 영역"></section>
+      <section class="main-stage" aria-label="현재 풍경 배경 영역">
+        <div class="window-stage" id="window-stage">
+          <div class="main-scene-image" id="main-scene-image" aria-hidden="true"></div>
+          <div class="time-overlay" id="time-overlay" aria-hidden="true"></div>
+          <canvas id="weather-canvas" class="weather-canvas" aria-hidden="true"></canvas>
+        </div>
+      </section>
 
       <footer class="main-footer">
         <button type="button" class="action-button action-button-primary">사운드 믹서 열기</button>
