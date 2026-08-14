@@ -21,11 +21,11 @@ const scenes = [
 	{
 		title: "다락방의 창문",
 		description: "조용히 머물 수 있는 다락방 풍경",
-		background: "url(assets/images/garret.png)",
+		background: "url(assets/images/attic-window.png)",
 		backgroundPosition: "center",
 		backgroundSize: "contain",
 		backgroundAspectRatio: 9 / 16,
-		weatherMask: "assets/images/garret_mask.png",
+		weatherMask: "assets/images/attic-window-mask.png",
 	},
 	{
 		title: "카페 창가",
