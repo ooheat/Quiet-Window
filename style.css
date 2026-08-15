@@ -371,15 +371,125 @@ body.view-main::after {
 }
 
 .window-stage.time-evening .time-overlay {
-  background: linear-gradient(180deg, rgba(12, 24, 45, 0.14) 0%, rgba(8, 14, 28, 0.12) 45%, rgba(8, 14, 28, 0.22) 100%);
+  background: linear-gradient(180deg, rgba(8, 18, 38, 0.28) 0%, rgba(6, 12, 27, 0.24) 45%, rgba(4, 9, 22, 0.38) 100%);
 }
 
 .window-stage.time-evening .time-overlay::before {
-  background: linear-gradient(180deg, rgba(12, 24, 45, 0.4) 0%, rgba(8, 14, 28, 0.3) 45%, rgba(8, 14, 28, 0.56) 100%);
+  background: linear-gradient(180deg, rgba(6, 17, 40, 0.66) 0%, rgba(4, 11, 30, 0.58) 45%, rgba(2, 6, 20, 0.76) 100%);
 }
+
 
 .main-footer {
   display: grid;
+  gap: 10px;
+}
+
+.mixer-panel {
+  border: 1px solid rgba(242, 245, 248, 0.22);
+  border-radius: 16px;
+  background: rgba(11, 18, 32, 0.94);
+  padding: 14px;
+}
+
+.mixer-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.mixer-header h3,
+.mixer-header p,
+.mixer-control h4,
+.mixer-status,
+.mixer-slider-label {
+  margin: 0;
+}
+
+.mixer-header h3 {
+  font-size: 1rem;
+}
+
+.mixer-header p {
+  font-size: 0.78rem;
+  opacity: 0.72;
+}
+
+.mixer-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  max-height: min(42vh, 360px);
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+.mixer-control {
+  min-width: 0;
+  border: 1px solid rgba(242, 245, 248, 0.16);
+  border-radius: 12px;
+  background: rgba(18, 26, 43, 0.86);
+  padding: 10px;
+}
+
+.mixer-control-heading {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 6px;
+}
+
+.mixer-icon {
+  display: grid;
+  place-items: center;
+  min-width: 24px;
+  min-height: 24px;
+  font-size: 1rem;
+}
+
+.mixer-control h4 {
+  overflow: hidden;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mixer-value {
+  min-width: 28px;
+  color: rgba(242, 245, 248, 0.88);
+  font-size: 0.82rem;
+  text-align: right;
+}
+
+.mixer-slider-label {
+  display: block;
+  margin-top: 8px;
+  color: rgba(242, 245, 248, 0.72);
+  font-size: 0.72rem;
+}
+
+.mixer-slider {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  margin: 0;
+  accent-color: #8eaed9;
+  cursor: pointer;
+}
+
+.mixer-status {
+  color: rgba(242, 245, 248, 0.56);
+  font-size: 0.7rem;
+}
+
+.mixer-control.is-unavailable {
+  opacity: 0.58;
+}
+
+.mixer-control.is-unavailable .mixer-slider {
+  cursor: not-allowed;
 }
 
 .weather-canvas {
@@ -405,5 +515,19 @@ body.view-main::after {
   body.view-main::before,
   body.view-main::after {
     display: none;
+  }
+
+  .mixer-header {
+    display: block;
+  }
+
+  .mixer-header p {
+    margin-top: 4px;
+  }
+}
+
+@media (max-width: 420px) {
+  .mixer-list {
+    grid-template-columns: 1fr;
   }
 }

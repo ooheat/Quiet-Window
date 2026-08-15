@@ -15,7 +15,23 @@ const weatherCanvas = document.getElementById("weather-canvas");
 const weatherContext = weatherCanvas ? weatherCanvas.getContext("2d") : null;
 const selectorOptions = document.querySelectorAll(".selector-option");
 const sceneArrows = document.querySelectorAll(".scene-arrow");
+const mixerToggle = document.getElementById("mixer-toggle");
+const mixerPanel = document.getElementById("mixer-panel");
+const mixerList = document.getElementById("mixer-list");
 const isHttpProtocol = window.location.protocol === "http:" || window.location.protocol === "https:";
+
+const soundChannels = [
+	{ id: "rain", label: "빗소리", icon: "☔", source: "assets/sounds/sound-rain.mp3" },
+	{ id: "wind", label: "바람소리", icon: "〰", source: "assets/sounds/sound-wind.mp3" },
+	{ id: "thunder", label: "천둥소리", icon: "⚡", source: "assets/sounds/sound-thunder.mp3" },
+	{ id: "fireplace", label: "장작 타는 소리", icon: "♨", source: "assets/sounds/sound-fireplace.mp3" },
+	{ id: "cafeChatter", label: "사람들 웅성거리는 소리", icon: "☕", source: "assets/sounds/sound-cafe-chatter.mp3" },
+	{ id: "pencil", label: "연필 소리", icon: "✎", source: "assets/sounds/sound-pencil.mp3" },
+	{ id: "train", label: "기차소리", icon: "▣", source: "assets/sounds/sound-train.mp3" },
+	{ id: "whiteNoise", label: "화이트 노이즈", icon: "◌", source: "assets/sounds/sound-white-noise.mp3" },
+];
+
+const audioChannels = new Map();
 
 const scenes = [
 	{
@@ -30,25 +46,28 @@ const scenes = [
 	{
 		title: "카페 창가",
 		description: "잔잔한 실내 소음 속에서 집중하기 좋은 창가 풍경",
-		background: "linear-gradient(135deg, #2a364f 0%, #4a5c7d 100%)",
+		background: "url(assets/images/cafe-window.png)",
 		backgroundPosition: "center",
-		backgroundSize: "cover",
-		weatherMask: "",
+		backgroundSize: "contain",
+		backgroundAspectRatio: 9 / 16,
+		weatherMask: "assets/images/cafe-window-mask.png",
 	},
 	{
 		title: "우주정거장의 창밖",
 		description: "고요한 우주를 바라보며 호흡을 가다듬는 풍경",
-		background: "linear-gradient(135deg, #16233d 0%, #2d406a 100%)",
+		background: "url(assets/images/space-station-window.png)",
 		backgroundPosition: "center",
-		backgroundSize: "cover",
-		weatherMask: "",
+		backgroundSize: "contain",
+		backgroundAspectRatio: 9 / 16,
+		weatherMask: "assets/images/space-station-window-mask.png",
 	},
 	{
 		title: "숲속 오두막의 창문",
 		description: "초록빛 기운과 함께 편안히 쉬는 숲속 풍경",
 		background: "linear-gradient(135deg, #1f2f3f 0%, #32516a 100%)",
 		backgroundPosition: "center",
-		backgroundSize: "cover",
+		backgroundSize: "contain",
+		backgroundAspectRatio: 9 / 16,
 		weatherMask: "",
 	},
 	{
@@ -56,7 +75,8 @@ const scenes = [
 		description: "규칙적인 진동감으로 마음을 안정시키는 열차 풍경",
 		background: "linear-gradient(135deg, #2a2f43 0%, #4b5678 100%)",
 		backgroundPosition: "center",
-		backgroundSize: "cover",
+		backgroundSize: "contain",
+		backgroundAspectRatio: 9 / 16,
 		weatherMask: "",
 	},
 ];
@@ -419,6 +439,81 @@ function renderWeatherOverlay() {
 	setWeatherMode(nextMode);
 }
 
+function createMixer() {
+	if (!mixerList) {
+		return;
+	}
+
+	for (const channel of soundChannels) {
+		const audio = new Audio(channel.source);
+		audio.loop = true;
+		audio.preload = "none";
+		audio.volume = 0;
+		audio.addEventListener("error", () => {
+			const control = mixerList.querySelector(`[data-channel-id="${channel.id}"]`);
+			control?.classList.add("is-unavailable");
+			const status = control?.querySelector(".mixer-status");
+			if (status) {
+				status.textContent = "파일 준비 중";
+			}
+		});
+		audioChannels.set(channel.id, audio);
+
+		const control = document.createElement("article");
+		control.className = "mixer-control";
+		control.dataset.channelId = channel.id;
+		control.innerHTML = `
+			<div class="mixer-control-heading">
+				<span class="mixer-icon" aria-hidden="true">${channel.icon}</span>
+				<h4>${channel.label}</h4>
+				<span class="mixer-value" data-value-for="${channel.id}">0</span>
+			</div>
+			<label class="mixer-slider-label" for="mixer-${channel.id}">${channel.label} 볼륨</label>
+			<input class="mixer-slider" id="mixer-${channel.id}" type="range" min="0" max="100" value="0" data-channel-id="${channel.id}" aria-label="${channel.label} 볼륨" />
+			<p class="mixer-status" aria-live="polite">파일 확인 중</p>
+		`;
+		mixerList.append(control);
+	}
+
+	mixerList.addEventListener("input", (event) => {
+		const slider = event.target.closest(".mixer-slider");
+		if (!slider) {
+			return;
+		}
+
+		const channelId = slider.dataset.channelId;
+		const volume = Number(slider.value);
+		const valueLabel = mixerList.querySelector(`[data-value-for="${channelId}"]`);
+		const audio = audioChannels.get(channelId);
+
+		if (valueLabel) {
+			valueLabel.textContent = String(volume);
+		}
+
+		if (!audio) {
+			return;
+		}
+
+		audio.volume = volume / 100;
+		if (volume > 0) {
+			audio.play().catch(() => {});
+		} else {
+			audio.pause();
+		}
+	});
+}
+
+function toggleMixerPanel() {
+	if (!mixerToggle || !mixerPanel) {
+		return;
+	}
+
+	const willOpen = mixerPanel.classList.contains("is-hidden");
+	mixerPanel.classList.toggle("is-hidden", !willOpen);
+	mixerToggle.textContent = willOpen ? "사운드 믹서 닫기" : "사운드 믹서 열기";
+	mixerToggle.setAttribute("aria-expanded", String(willOpen));
+}
+
 function toggleEnvPanel() {
 	if (!envPanel || !envToggle) {
 		return;
@@ -442,6 +537,7 @@ renderMainScene();
 renderTimeOverlay();
 syncWindowStageBounds();
 renderWeatherOverlay();
+createMixer();
 
 if (startButton && startScreen && sceneScreen) {
 	startButton.addEventListener("click", () => {
@@ -476,6 +572,10 @@ if (envToggle) {
 	envToggle.addEventListener("click", () => {
 		toggleEnvPanel();
 	});
+}
+
+if (mixerToggle) {
+	mixerToggle.addEventListener("click", toggleMixerPanel);
 }
 
 for (const optionButton of selectorOptions) {

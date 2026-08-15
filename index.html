@@ -75,7 +75,14 @@
       </section>
 
       <footer class="main-footer">
-        <button type="button" class="action-button action-button-primary">사운드 믹서 열기</button>
+        <button type="button" class="action-button action-button-primary" id="mixer-toggle" aria-expanded="false" aria-controls="mixer-panel">사운드 믹서 열기</button>
+        <section class="mixer-panel is-hidden" id="mixer-panel" aria-label="사운드 믹서">
+          <div class="mixer-header">
+            <h3>사운드 믹서</h3>
+            <p>각 소리의 크기를 직접 조절하세요.</p>
+          </div>
+          <div class="mixer-list" id="mixer-list"></div>
+        </section>
       </footer>
     </main>
 
